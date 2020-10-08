@@ -1,6 +1,7 @@
 package utilityPackage;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.Scanner;
 
 import operaciones.Operaciones;
@@ -87,8 +88,8 @@ public class EntradaDatos {
 	
 	/**
 	 * Metodo que permite la entrada de un dato de tipo int por teclado pero que solo permite que este se encuentre en una determinada horquilla de numeros.
-	 * @param min 
-	 * @param max
+	 * @param min int minimo aceptado por el metodo
+	 * @param max int maximo aceptado por el metodo
 	 * @return int
 	 */
 	public int pedirInt_Parametros(int min, int max) {
@@ -143,7 +144,7 @@ public class EntradaDatos {
 		System.out.println("Introduzca un mes:");
 		int month = pedirInt_Parametros(1, 12);
 		System.out.println("Introduzca un dia:");
-		int dayOfMonth = pedirInt_Parametros(1, 31);
+		int dayOfMonth = pedirInt_Parametros(1, YearMonth.of(year, month).lengthOfMonth());
 		
 		return LocalDate.of(year, month, dayOfMonth);
 	}

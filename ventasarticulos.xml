@@ -8,16 +8,28 @@
     </articulo>
     <ventas>
         <venta>
+            <numventa>10</numventa>
+            <unidades>10</unidades>
+            <nombrecliente>Alicia Ramos</nombrecliente>
+            <fecha>10-10-2015</fecha>
+        </venta>
+        <venta>
             <numventa>11</numventa>
-            <unidades>5</unidades>
+            <unidades>2</unidades>
             <nombrecliente>Pedro García</nombrecliente>
             <fecha>15-10-2015</fecha>
         </venta>
         <venta>
             <numventa>12</numventa>
-            <unidades>36</unidades>
+            <unidades>6</unidades>
             <nombrecliente>Alberto Gil</nombrecliente>
-            <fecha>23-11-2012</fecha>
+            <fecha>20-10-2015</fecha>
+        </venta>
+        <venta>
+            <numventa>30</numventa>
+            <unidades>10</unidades>
+            <nombrecliente>Cliente 1</nombrecliente>
+            <fecha>16-12-2015</fecha>
         </venta>
     </ventas>
 </ventasarticulos>

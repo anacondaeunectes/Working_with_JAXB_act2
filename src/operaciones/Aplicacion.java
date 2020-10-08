@@ -19,9 +19,11 @@ public class Aplicacion {
 	
 	/**
 	 * Metodo main donde se ejecuta el programa. Este ofrece las distintas funcionalidades de la aplicaion a traves de un menu por consola que interactua con el usuario.
-	 * @param args 
+	 * @param args Argumentos de entrada al programa, en este caso no van a ser utilizados.
 	 */
 	public static void main(String[] args) {
+		
+		int num = 1, numVenta, sumaUnidades;
 		
 		System.out.println("Leyendo archivo XML y caragando datos...");
 		
@@ -29,10 +31,9 @@ public class Aplicacion {
 			System.out.println("Lectura finalizada correctamente.");
 		}else {
 			System.out.println("Error al leer los datos. Por favor revise la existencia del fichero '" + operaciones.xmlFile + "'");
+			num = 0;
 		}
-		
-		int num = 1, numVenta, sumaUnidades;
-		
+				
 		//Bucle para el menu
 		while (num != 0) {
 			
