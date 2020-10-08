@@ -1,197 +1,127 @@
 package operaciones;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Optional;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-
-import clasesDatos.ObjectFactory;
-import clasesDatos.VentasType;
-import clasesDatos.Ventas.Venta;
 import utilityPackage.EntradaDatos;
 
 /**
- * Clase que contiene la logica de la aplicacion.
- * @author anaco
+ * Clase que contiene el metodo main de la aplicacion y su punto de entrada. Este ejecuta un CLI que permite operar con los datos de un XML.
+ * @author Pablo Gutierrez
  *
  */
 public class Aplicacion {
-
-	//Objeto JAXBElement estatico que contiene toda la informacion leida en el XML
-	public static JAXBElement<VentasType> element;
 	
-	//Objeto File que representa el XML con el que esta aplicacion trabaja
-	public static File xmlFile = new File("ventasarticulos.xml");
+	//Referencia a la instancia unica de la clase SINGLETON Operaciones. Con este objeto se accederan a todas las funcionalidades de la aplicaciones.
+	private static Operaciones operaciones = Operaciones.getOperaciones();
 	
-	/**
-	 * Metodo que lee la informacion contenida en el XML y la carga en un JAXBElement.
-	 * @return <ul>
-	 * 			<li>true: si se produce una lectura correcta.</li>
-	 * 			<li>false: si se produce algun error en la lectura.</li>
-	 * 			</ul>
-	 */
-	public static boolean lecturaXML() {
-		
-		boolean flag = true;
-		
-		try {
-			
-			FileInputStream fis = new FileInputStream(xmlFile);
-			
-			JAXBContext context = JAXBContext.newInstance(ObjectFactory.class);
-			
-			Unmarshaller unmarshaller = context.createUnmarshaller();
-			
-			element = (JAXBElement) unmarshaller.unmarshal(fis);
-
-		} catch (JAXBException e) {
-			e.printStackTrace();
-			flag = false;
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			flag = false;
-		}
-		
-		return flag;
-	}
-	
-	/**
-	 * Metodo que escribe la informacion del JAXBElement "element" en el XML.
-	 * @return <ul>
-	 * 			<li>true: si se produce una escritura correcta.</li>
-	 * 			<li>false: si se produce algun error en la escritura. En cuyo caso, los cambios realizados seran deshechos.</li>
-	 * 			</ul>
-	 */
-	public static boolean escrituraXML() {
-		
-		boolean flag = true;
-		
-		try {
-		
-			JAXBContext context = JAXBContext.newInstance(ObjectFactory.class);
-			
-			Marshaller marshaller = context.createMarshaller();
-			
-			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-			
-			VentasType ventas = element.getValue();
-			
-			marshaller.marshal(new ObjectFactory().createVentasarticulos(ventas), xmlFile);
-			
-		} catch (JAXBException e) {
-			e.printStackTrace();
-			flag = false;
-		}
-
-		return flag;
-	}
-	
-	/**
-	 * Metodo que borra los datos de una venta en funcion de su numero de venta.
-	 * @param numVenta numero de la venta a borrar.
-	 * @return <ul>
-	 * 			<li>true: si el borrado se realiza correctamente.</li>
-	 * 			<li>false: si se produce algun error en el borrado.</li>
-	 * 			</ul>
-	 */
-	private static boolean borrarVenta(int numVenta) {
-		
-		boolean flag = false;		
-		
-		Optional<Venta> ventaBorrar = buscarVenta(numVenta);
-		
-		if (ventaBorrar.isPresent()) {
-			element.getValue().getVentas().getVenta().remove(ventaBorrar.get());
-			flag = true;
-		}
-
-		return flag;
-	}
-	
-	/**
-	 * Metodo que agrega un determinado numero de unidades a una de las ventas.
-	 * @param numVenta numero de venta cuyas unidades quieren ser modificadas.
-	 * @param adicion numero de unidades a agregar a las unidades actuales de a venta.
-	 * @return <ul>
-	 * 			<li>true: si la modificacion se efectua con exito.</li>
-	 * 			<li>false: si se produce algun error en la modificacion.</li>
-	 * 			</ul>
-	 */
-	private static boolean modificarUnidades(int numVenta, int adicion) {
-		
-		boolean flag = false;
-		
-		Optional<Venta> ventaUnidades = buscarVenta(numVenta);
-		
-		if (ventaUnidades.isPresent()) {
-			ventaUnidades.get().setUnidades(ventaUnidades.get().getUnidades() + adicion);
-			flag = true;
-		}
-		
-		return flag;
-	}
-	
-	/**
-	 * Metodo que modifica los datos de una venta, tanto las unidades vendidas como la fecha de la venta.
-	 * @param numVenta numero de venta a modificar.
-	 * @param unidades nuevas unidades de la venta.
-	 * @param fecha nueva fecha de la venta.
-	 * @return <ul>
-	 * 			<li>true: si la modificacion se realiza con exito.</li>
-	 * 			<li>false: si se produce algun error en la modificacion.</li>
-	 * 			</ul>
-	 */
-	private static boolean modificarVenta(int numVenta, int unidades, LocalDate fecha) {
-		
-		boolean flag = false;
-		
-		Optional<Venta> ventaModificar = buscarVenta(numVenta);
-		
-		if (ventaModificar.isPresent()) {
-			
-			ventaModificar.get().setUnidades(unidades);
-			ventaModificar.get().setFecha(fecha.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-			
-			flag = true;
-		}
-		
-		return flag;
-	}
-	
-	/**
-	 * Metodo que busca una venta en el listado en funcion de su numero de venta.
-	 * @param numVenta numero de venta a buscar
-	 * @return devuelve un Optional<Venta> en funcion del numero de venta introducido por parametro. Este puede estar vacio si no ha encontrada esa numero de venta o puede contener el objeto Venta que coincide con el numero de venta buscado.
-	 */
-	private static Optional<Venta> buscarVenta(int numVenta){
-		
-		List<Venta> listaVentas = element.getValue().getVentas().getVenta();
-
-		return listaVentas.stream().
-				filter(x -> x.getNumventa().intValue() == numVenta).
-				findFirst();
-	}
+	//Referencia a la instancia uica de la claase SINGLETON EntradaDatos. Con este objeto se accederan a todos los metodos de I/O entre el usuario y la aplica.
+	private static EntradaDatos entradaDatos = EntradaDatos.getEntradaDatos();
 	
 	/**
 	 * Metodo main donde se ejecuta el programa. Este ofrece las distintas funcionalidades de la aplicaion a traves de un menu por consola que interactua con el usuario.
-	 * @param args
+	 * @param args 
 	 */
 	public static void main(String[] args) {
+		
+		System.out.println("Leyendo archivo XML y caragando datos...");
+		
+		if (operaciones.lecturaXML()) {
+			System.out.println("Lectura finalizada correctamente.");
+		}else {
+			System.out.println("Error al leer los datos. Por favor revise la existencia del fichero '" + operaciones.xmlFile + "'");
+		}
+		
+		int num = 1, numVenta, sumaUnidades;
+		
+		//Bucle para el menu
+		while (num != 0) {
+			
+			System.out.println("\nMENU GESTION VENTAS");
+			System.out.println("=-=-=-=-=-=-=-=-=-=");
+			System.out.println("1. Borrar venta");
+			System.out.println("2. Agregar unidades");
+			System.out.println("3. Modificar venta");
+			System.out.println("4. Guardar cambios");
+			System.out.println("0. Guardar y salir");
+			System.out.println("\nIntroduzca la opcion deseada:");
+		
+			switch (num = entradaDatos.pedirInt()) {
+			
+			//Borrar venta
+			case 1:
 
-		lecturaXML();
-//		borrarVenta(12);
-//		modificarUnidades(11, 3);
-		modificarVenta(12, 36, EntradaDatos.pedirFecha(1900, 2020));
-		escrituraXML();
+				System.out.println("Introduzca el numero de la venta:");
+				numVenta = entradaDatos.pedirInt();
+				if (operaciones.borrarVenta(numVenta)) {
+					System.out.println("¡Venta borrada con exito!");
+				}else {
+					System.err.println("Error al borrar la venta. Por favor, revise el numero de venta introducido.");
+				}
+				
+			break;
+			
+			//Agregar unidades
+			case 2:
+				
+				System.out.println("Introduzca el numero de venta:");
+				numVenta = entradaDatos.pedirInt();
+				System.out.println("Introduzca el numero unidades a agregar:");
+				sumaUnidades = entradaDatos.pedirInt();
+				
+				if (operaciones.agregarUnidades(numVenta, sumaUnidades) && sumaUnidades > 0) {
+					System.out.println("¡Unidades agregadas con exito!");
+				}else {
+					System.err.println("Error al agregar las unidades. Posibles fallos:\n \t -Numero ve venta no existente\n \t -El numero de unidades a agregar sea negativo o 0.");
+				}
+				
+				break;
+			
+			//Modificar datos venta
+			case 3:
+				System.out.println("Introduzca el numero de la venta:");
+				numVenta = entradaDatos.pedirInt();
+				System.out.println("Introduzca el nuevo numero de unidades de la venta:");
+				sumaUnidades = entradaDatos.pedirInt();
+
+				if (operaciones.modificarVenta(numVenta, sumaUnidades, entradaDatos.pedirFecha(1800, LocalDate.now().getYear()))) {
+					System.out.println("¡Venta modificada con exito!");
+				}else {
+					System.err.println("Error al modificar la venta. Posibles fallos:\n \t -Numero ve venta no existente\n \t -El nuevo numero de unidades sea negativo o 0.\n \t -Fecha erronea o anterior a 1800.");
+				}
+				
+				break;
+			
+			//Guardar cambios
+			case 4:
+				if (operaciones.escrituraXML()) {
+					System.out.println("¡Guardado realizado con exito!");
+				}else {
+					System.err.println("Fallo en el guardado. Por favor intentelo de nuevo.");
+				}
+				
+				break;
+			
+			//Guardar y salir
+			case 0:
+				if (operaciones.escrituraXML()) {
+					System.out.println("¡Guardado realizado con exito!\n¡Adios!");
+					num = 0;
+				}else {
+					System.err.println("Error al guardar los datos. ¿Quiere cancelar la operacion de salida y salir de todas formas?");
+					if (entradaDatos.pedirYesNo() == 1) { //En caso afirmativo (y), se saldra sin guardar. En caso negativo (n), se cancelara la operacion de salida y se retornara al menu.
+						num = 0;
+					}
+				}
+			
+				break;
+			//Mensaje de error en caso de no seleccionar ninguna de las opciones descritas.
+			default:
+				System.err.println("Opcion no valida. Por favor, introduzca una opcion valida:");
+				break;
+			}
+			
+		}
+		
 	}	
 
 }

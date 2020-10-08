@@ -3,23 +3,39 @@ package utilityPackage;
 import java.time.LocalDate;
 import java.util.Scanner;
 
+import operaciones.Operaciones;
+
 /**
- * Clase que controla la entrada de datos al programa.
- * 
+ * Clase SINGLETON que controla la entrada de datos al programa.
  * @author Pablo Gutierrez
  */
 public class EntradaDatos {
+	
+	//Instancia de la clase a ser utiliada de manera unica.
+	private static EntradaDatos entradaDatos_Instance = null;
+	
+	//Constructor vacio propio del patron singleton.
+	private EntradaDatos() {}
+	
+	//Metodo getter que permite recoger el objeto EntradaDatos unico. En caso de que todavia no se haya creado la instancia, se crea. 
+	public static EntradaDatos getEntradaDatos(){
+		if (entradaDatos_Instance == null) {
+			entradaDatos_Instance = new EntradaDatos();
+		}
+		
+		return entradaDatos_Instance;
+	}
 
 	/**
 	 * Scanner que crea el flujo de entrada.
 	 */
-	static Scanner entrada = new Scanner(System.in);
+	public Scanner entrada = new Scanner(System.in);
 
 	/**
 	 * Metodo que permite la entrada de un dato de tipo double por teclado
 	 * @return double
 	 */
-	public static double pedirDouble() {
+	public double pedirDouble() {
 		
 		double num = 0;
 		boolean ok=false;
@@ -44,7 +60,7 @@ public class EntradaDatos {
 	 * Metodo que permite la entrada de un dato de tipo int por teclado
 	 * @return int
 	 */
-	public static int pedirInt(){
+	public int pedirInt(){
 		
 		int num = 0;
 		boolean ok=true;
@@ -75,7 +91,7 @@ public class EntradaDatos {
 	 * @param max
 	 * @return int
 	 */
-	public static int pedirInt_Parametros(int min, int max) {
+	public int pedirInt_Parametros(int min, int max) {
 		
 		String frase = "Numero no valido. Por favor, vuelva a introducirlo: ";
 		int num = 0;
@@ -112,7 +128,7 @@ public class EntradaDatos {
 	 * Metodo que permite la entrada de un dato de tipo String por teclado
 	 * @return String
 	 */
-	public static String pedirString() {
+	public String pedirString() {
 		
 		String cadena = entrada.nextLine();
 		
@@ -120,9 +136,9 @@ public class EntradaDatos {
 		
 	}
 	
-	public static LocalDate pedirFecha(int annoInicio, int annoLimite) {
+	public LocalDate pedirFecha(int annoInicio, int annoLimite) {
 		
-		System.out.println("Introduzca un anno:");
+		System.out.println("Introduzca un agno:");
 		int year = pedirInt_Parametros(annoInicio, annoLimite);
 		System.out.println("Introduzca un mes:");
 		int month = pedirInt_Parametros(1, 12);
@@ -130,6 +146,26 @@ public class EntradaDatos {
 		int dayOfMonth = pedirInt_Parametros(1, 31);
 		
 		return LocalDate.of(year, month, dayOfMonth);
+	}
+	
+	public int pedirYesNo() {
+				
+		char character; 
+		
+		int c = 5;
+		
+		while (c > 1) {
+			System.out.println("Introduzca una opcion (y/n):");
+			character = pedirString().charAt(0);
+			
+			if (character == 'y' || character == 'Y') {
+				c = 1;
+			}else if (character == 'n' || character == 'N') {
+				c = 0;
+			}
+		}
+		
+		return c;
 	}
 	
 }

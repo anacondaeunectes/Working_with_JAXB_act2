@@ -18,13 +18,33 @@ import clasesDatos.ObjectFactory;
 import clasesDatos.VentasType;
 import clasesDatos.Ventas.Venta;
 
+/**
+ * Clase SINGLETON que contiene la logica de las funcionalidades de la aplicacion.
+ * @author Pablo Gutierrez
+ *
+ */
 public class Operaciones {
 	
-	//Objeto JAXBElement estatico que contiene toda la informacion leida en el XML
-		public static JAXBElement<VentasType> element;
+	//Instancia de la clase a ser utiliada de manera unica.
+	private static Operaciones operaciones_Instance = null;
+	
+	//Constructor vacio propio del patron singleton.
+	private Operaciones() {}
+	
+	//Metodo getter que permite recoger el objeto Operaciones unico. En caso de que todavia no se haya creado la instancia, se crea. 
+	public static Operaciones getOperaciones(){
+		if (operaciones_Instance == null) {
+			operaciones_Instance = new Operaciones();
+		}
 		
-		//Objeto File que representa el XML con el que esta aplicacion trabaja
-		public static File xmlFile = new File("ventasarticulos.xml");
+		return operaciones_Instance;
+	}
+	
+		//Objeto JAXBElement estatico que contiene toda la informacion leida en el XML.
+		public JAXBElement<VentasType> element;
+		
+		//Objeto File que representa el XML con el que esta aplicacion trabaja.
+		public File xmlFile = new File("ventasarticulos.xml");
 		
 		/**
 		 * Metodo que lee la informacion contenida en el XML y la carga en un JAXBElement.
@@ -33,7 +53,7 @@ public class Operaciones {
 		 * 			<li>false: si se produce algun error en la lectura.</li>
 		 * 			</ul>
 		 */
-		public static boolean lecturaXML() {
+		public boolean lecturaXML() {
 			
 			boolean flag = true;
 			
@@ -65,7 +85,7 @@ public class Operaciones {
 		 * 			<li>false: si se produce algun error en la escritura. En cuyo caso, los cambios realizados seran deshechos.</li>
 		 * 			</ul>
 		 */
-		public static boolean escrituraXML() {
+		public boolean escrituraXML() {
 			
 			boolean flag = true;
 			
@@ -97,7 +117,7 @@ public class Operaciones {
 		 * 			<li>false: si se produce algun error en el borrado.</li>
 		 * 			</ul>
 		 */
-		private static boolean borrarVenta(int numVenta) {
+		public boolean borrarVenta(int numVenta) {
 			
 			boolean flag = false;		
 			
@@ -120,7 +140,7 @@ public class Operaciones {
 		 * 			<li>false: si se produce algun error en la modificacion.</li>
 		 * 			</ul>
 		 */
-		private static boolean modificarUnidades(int numVenta, int adicion) {
+		public boolean agregarUnidades(int numVenta, int adicion) {
 			
 			boolean flag = false;
 			
@@ -144,7 +164,7 @@ public class Operaciones {
 		 * 			<li>false: si se produce algun error en la modificacion.</li>
 		 * 			</ul>
 		 */
-		private static boolean modificarVenta(int numVenta, int unidades, LocalDate fecha) {
+		public boolean modificarVenta(int numVenta, int unidades, LocalDate fecha) {
 			
 			boolean flag = false;
 			
@@ -166,7 +186,7 @@ public class Operaciones {
 		 * @param numVenta numero de venta a buscar
 		 * @return devuelve un Optional<Venta> en funcion del numero de venta introducido por parametro. Este puede estar vacio si no ha encontrada esa numero de venta o puede contener el objeto Venta que coincide con el numero de venta buscado.
 		 */
-		private static Optional<Venta> buscarVenta(int numVenta){
+		private Optional<Venta> buscarVenta(int numVenta){
 			
 			List<Venta> listaVentas = element.getValue().getVentas().getVenta();
 
