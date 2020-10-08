@@ -15,8 +15,8 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import clasesDatos.ObjectFactory;
-import clasesDatos.Ventas.Venta;
 import clasesDatos.VentasType;
+import clasesDatos.Ventas.Venta;
 import utilityPackage.EntradaDatos;
 
 /**
