@@ -11,10 +11,14 @@ import utilityPackage.EntradaDatos;
  */
 public class Aplicacion {
 	
-	//Referencia a la instancia unica de la clase SINGLETON Operaciones. Con este objeto se accederan a todas las funcionalidades de la aplicaciones.
+	/**
+	 * Referencia a la instancia unica de la clase SINGLETON Operaciones. Con este objeto se accederan a todas las funcionalidades de la aplicaciones.
+	 */
 	private static Operaciones operaciones = Operaciones.getOperaciones();
 	
-	//Referencia a la instancia uica de la claase SINGLETON EntradaDatos. Con este objeto se accederan a todos los metodos de I/O entre el usuario y la aplica.
+	/**
+	 * Referencia a la instancia uica de la claase SINGLETON EntradaDatos. Con este objeto se accederan a todos los metodos de I/O entre el usuario y la aplica.
+	 */
 	private static EntradaDatos entradaDatos = EntradaDatos.getEntradaDatos();
 	
 	/**

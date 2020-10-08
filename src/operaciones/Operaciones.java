@@ -25,13 +25,20 @@ import clasesDatos.Ventas.Venta;
  */
 public class Operaciones {
 	
-	//Instancia de la clase a ser utiliada de manera unica.
+	/**
+	 * Instancia de la clase a ser utiliada de manera unica.
+	 */
 	private static Operaciones operaciones_Instance = null;
 	
-	//Constructor vacio propio del patron singleton.
+	/**
+	 * Constructor vacio propio del patron singleton.
+	 */
 	private Operaciones() {}
 	
-	//Metodo getter que permite recoger el objeto Operaciones unico. En caso de que todavia no se haya creado la instancia, se crea. 
+	/**
+	 * Metodo getter que permite recoger el objeto Operaciones unico. En caso de que todavia no se haya creado la instancia, se crea. 
+	 * @return retorna la instancia unica de la clase operaciones.
+	 */
 	public static Operaciones getOperaciones(){
 		if (operaciones_Instance == null) {
 			operaciones_Instance = new Operaciones();
@@ -40,10 +47,14 @@ public class Operaciones {
 		return operaciones_Instance;
 	}
 	
-		//Objeto JAXBElement estatico que contiene toda la informacion leida en el XML.
+		/**
+		 * Objeto JAXBElement estatico que contiene toda la informacion leida en el XML.
+		 */
 		public JAXBElement<VentasType> element;
 		
-		//Objeto File que representa el XML con el que esta aplicacion trabaja.
+		/**
+		 * Objeto File que representa el XML con el que esta aplicacion trabaja.
+		 */
 		public File xmlFile = new File("ventasarticulos.xml");
 		
 		/**
